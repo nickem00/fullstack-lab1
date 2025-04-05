@@ -2,11 +2,17 @@ import mongoose from "mongoose";
 
 // Schema for validation
 const dishSchema = new mongoose.Schema({
-    name: String,
+    name: {
+        type: String,
+        lowercase: true
+    },
     ingredients: [String],
     preparationSteps: [String],
     cookingTime: Number,
-    origin: String,
+    origin: {
+        type: String,
+        lowercase: true
+    },
     isVegetarian: Boolean
 });
 
