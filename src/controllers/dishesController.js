@@ -75,3 +75,44 @@ export const createDish = async (req, res, next) => {
         next(error);
     }
 }
+
+export const updateDish = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        const {
+            name,
+            ingredients,
+            preparationSteps,
+            cookingTime,
+            origin,
+            isVegetarian
+        } = req.body;
+
+        if (!name || !ingredients || !preparationSteps || !cookingTime || !origin || isVegetarian === undefined) {
+            return res.status(400).json({ message: "All fields are required" });
+        }
+
+        const updatedDish = await Dish.findByIdAndUpdate(
+            id,
+            {
+                name: name.toLowerCase(),
+                ingredients,
+                preparationSteps,
+                cookingTime,
+                origin: origin.toLowerCase(),
+                isVegetarian
+            },
+            { new: true }
+        );
+
+        if (!updatedDish) {
+            return res.status(404).json({ message: "Dish not found" });
+        }
+
+        res.status(200).json(updatedDish)
+
+    } catch (error) {
+        console.error("Error while updating dish:");
+        next(error);
+    }
+}
