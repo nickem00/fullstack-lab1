@@ -36,3 +36,42 @@ export const getDishByName = async (req, res, next) => {
         next(error);
     }
 }
+
+export const createDish = async (req, res, next) => {
+    try {
+        let {
+            name,
+            ingredients,
+            preparationSteps,
+            cookingTime,
+            origin,
+            isVegetarian
+        } = req.body;
+
+        name = name.toLowerCase();
+        origin = origin.toLowerCase();
+
+        const alreadyExists = await Dish.find({ name: name });
+
+        if (alreadyExists.length > 0) {
+            return res.status(409).json({ message: "Dish with that name already exists" })
+        }
+
+        const newDish = {
+            name: name,
+            ingredients: ingredients,
+            preparationSteps: preparationSteps,
+            cookingTime: cookingTime,
+            origin: origin,
+            isVegetarian: isVegetarian
+        };
+
+        const result = await Dish.create(newDish);
+
+        res.status(201).json(result)
+        
+    } catch (error) {
+        console.error("Error while creating a new dish in the database:");
+        next(error);
+    }
+}
