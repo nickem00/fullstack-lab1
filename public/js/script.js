@@ -10,7 +10,17 @@ document.addEventListener('DOMContentLoaded', function() {
         displayDishes(allDishes);
     }
 
+    const closeModalBtn = document.getElementById('close-btn');
+    const modal = document.getElementById('modal');
+    const addNewBtn = document.getElementById('add-new-button');
 
+    closeModalBtn.addEventListener('click', () => {
+        modal.classList.add('hidden');
+    })
+
+    addNewBtn.addEventListener('click', () => {
+        modal.classList.remove('hidden');
+    });
 
     // === Functions ===
     // The fetch function that fetches all dishes from the database
