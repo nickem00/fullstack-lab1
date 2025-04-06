@@ -13,6 +13,7 @@
     </header>
 
     <main>
+        <button class="add-new-button">Add New</button>
         <table>
             <thead>
               <tr>
@@ -38,6 +39,49 @@
                 </tr>
             </tbody>
         </table>
+
+        <div id="modal" style="display: none;">
+            <div id="modal-form-container">
+                <div id="title-close-btn">
+                    <h2>Add/Modify Dish</h2>
+                    <p id="close-btn">x</p>
+                </div>
+                <form id="dish-form">
+                    <div>
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name" title="Enter dish name">
+                    </div>
+
+                    <div>
+                        <label for="ingredients">Ingredients:</label>
+                        <input type="text" id="ingredients" name="ingredients" title="Enter ingredients">
+                    </div>
+
+                    <div>
+                        <label for="preparation-steps">Preparation steps:</label>
+                        <input type="text" id="preparation-steps" name="preparation-steps" title="Enter preparation steps">
+                    </div>
+
+                    <div>
+                        <label for="cooking-time">Cooking time:</label>
+                        <input type="number" id="cooking-time" name="cooking-time" title="Enter cooking time">
+                    </div>
+
+                    <div>
+                        <label for="origin">Origin:</label>
+                        <input type="text" id="origin" name="origin" title="Enter country of origin">
+                    </div>
+
+                    <div id="checkbox">
+                        <label>
+                            <input type="checkbox" name="is-vegetarian" id="is-vegetarian">
+                            Vegetarian
+                        </label>
+                    </div>
+                    
+                </form>
+            </div>
+        </div>
     </main>
       
 </body>

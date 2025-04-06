@@ -73,6 +73,8 @@ document.addEventListener('DOMContentLoaded', function() {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
+    // Adding event listeners to the delete buttons
+    // Called after loading the table
     async function addEventListeners() {
         const deleteButtons = document.querySelectorAll('.delete-btn');
         deleteButtons.forEach(button => {
@@ -83,6 +85,7 @@ document.addEventListener('DOMContentLoaded', function() {
         })
     }
 
+    // The functionality for delete buttons
     async function deleteDish(id) {
         const confirmDelete = confirm("Are you sure you want to delete this dish?")
         if (!confirmDelete) return;
