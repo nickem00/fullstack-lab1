@@ -33,6 +33,11 @@ main {
 
 table {
     border-collapse: collapse;
+    border-radius: 8px;
+    background-color: #2b2b2b;
+    min-width: 80%;
+    max-width: 1544px;
+    overflow: hidden;
 }
 
 th {
@@ -41,9 +46,47 @@ th {
 }
 
 tbody tr:first-child td {
-    padding-top: 1rem; /* eller så mycket luft du vill ha */
+    padding-top: 1rem;
+}
+
+tr:nth-child(even) {
+    background-color: #1f1f1f;
 }
 
 td {
     text-align: center;
+    padding: 1rem;
+}
+
+.dish-name {
+    font-weight: bold;
+    text-transform: capitalize;
+}
+
+.ingredients {
+    text-transform: capitalize;
+}
+
+button {
+    padding: 0.5rem 1rem;
+    font-weight: bold;
+    background-color: rgb(255, 255, 255);
+    border: none;
+    width: 88px;
+    border-radius: 8px;
+}
+
+button:hover {
+    filter: brightness(50%);
+    cursor: pointer;
+}
+
+button:active {
+    filter: brightness(30%);
+}
+
+.delete-btn {
+    margin-bottom: 0.3rem;
+    background-color: #c70000;
+    color: white;
 }
