@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
+    let currentDishId = null;
 
-    
     // Run the main function to load dishes
     main();
 
@@ -13,14 +13,25 @@ document.addEventListener('DOMContentLoaded', function() {
     const closeModalBtn = document.getElementById('close-btn');
     const modal = document.getElementById('modal');
     const addNewBtn = document.getElementById('add-new-button');
+    const dishForm = document.getElementById('dish-form');
+    
 
     closeModalBtn.addEventListener('click', () => {
         modal.classList.add('hidden');
     })
 
     addNewBtn.addEventListener('click', () => {
+        dishForm.reset();
+        currentDishId = null;
         modal.classList.remove('hidden');
+        
     });
+
+    dishForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        submitForm();
+    })
+
 
     // === Functions ===
     // The fetch function that fetches all dishes from the database
@@ -83,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
-    // Adding event listeners to the delete buttons
+    // Adding event listeners to the buttons
     // Called after loading the table
     async function addEventListeners() {
         const deleteButtons = document.querySelectorAll('.delete-btn');
@@ -91,6 +102,14 @@ document.addEventListener('DOMContentLoaded', function() {
             button.addEventListener('click', () => {
                 const id = button.dataset.id;
                 deleteDish(id);
+            })
+        })
+
+        const modifyButtons = document.querySelectorAll('.modify-btn');
+        modifyButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const id = button.dataset.id;
+                handleModify(id);
             })
         })
     }
@@ -116,5 +135,84 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Error deleting dish:', error);
         }
     }
+
+    // The functionality for the modify buttons
+    // Calling on the PUT function in the API
+    async function handleModify(id) {
+        try {
+            // Display modal
+            modal.classList.remove('hidden');
+
+            // Get input fields
+            const nameInput = document.getElementById('name');
+            const ingredientsInput = document.getElementById('ingredients');
+            const preparationInput = document.getElementById('preparation-steps');
+            const cookingTimeInput = document.getElementById('cooking-time');
+            const originInput = document.getElementById('origin');
+            const isVegetarianInput = document.getElementById('is-vegetarian');
+
+            // Fetch current dish
+            const response = await fetch(`api/dishes/id/${id}`);
+            const dish = await response.json();
+
+            // Fill in the current values
+            nameInput.value = dish.name;
+            ingredientsInput.value = dish.ingredients.join(', ');
+            preparationInput.value = dish.preparationSteps.join(', ');
+            cookingTimeInput.value = dish.cookingTime;
+            originInput.value = dish.origin;
+            isVegetarianInput.checked = dish.isVegetarian;
+
+            currentDishId = id;
+
+        } catch (error) {
+            console.error('Errir updating dish', error);
+        }
+    }
     
+    async function submitForm() {
+        const name = document.getElementById('name').value.trim();
+        const ingredients = document.getElementById('ingredients').value.split(',').map(i => i.trim());
+        const preparationSteps = document.getElementById('preparation-steps').value.split(',').map(s => s.trim());
+        const cookingTime = parseInt(document.getElementById('cooking-time').value);
+        const origin = document.getElementById('origin').value.trim();
+        const isVegetarian = document.getElementById('is-vegetarian').checked;
+
+        const dishData = {
+            name,
+            ingredients,
+            preparationSteps,
+            cookingTime,
+            origin,
+            isVegetarian
+        };
+
+        try {
+            // IF modify existing dish
+            if (currentDishId) {
+                await fetch(`/api/dishes/${currentDishId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(dishData)
+                });
+            } else {
+                // IF new dish
+                await fetch('/api/dishes', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(dishData)
+                });
+            }
+
+            modal.classList.add('hidden');
+            const updatedDished = await fetchAllDishes();
+            displayDishes(updatedDished);
+        } catch (error) {
+            console.error('Error saving dish:', error);
+        }
+    }
 })

@@ -4,13 +4,15 @@ import {
     getDishByName,
     createDish,
     updateDish,
-    deleteDishById
+    deleteDishById,
+    getDishById
 } from '../controllers/dishesController.js';
 
 const router = express.Router();
 
 router.get('/', getAllDishes);
 router.get('/:name', getDishByName);
+router.get('/id/:id', getDishById)
 router.post('/', createDish);
 router.put('/:id', updateDish);
 router.delete('/:id', deleteDishById);

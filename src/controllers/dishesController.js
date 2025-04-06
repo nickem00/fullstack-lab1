@@ -136,4 +136,23 @@ export const deleteDishById = async (req, res, next) => {
         console.error("Error while deleting dish:");
         next(error);
     }
+
+}
+
+export const getDishById = async (req, res, next) => {
+    try {
+        const { id } = req.params;
+
+        const dish = await Dish.findById(id);
+
+        if (!dish) {
+            return res.status(404).json({ message: "Dish not found" });
+        }
+
+        res.status(200).json(dish);
+        
+    } catch (error) {
+        console.error("Error while fetching dish by ID:");
+        next(error);
+    }
 }
