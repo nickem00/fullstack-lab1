@@ -1,12 +1,20 @@
 document.addEventListener('DOMContentLoaded', function() {
+
+    
+    // Run the main function to load dishes
     main();
 
+    // Main function that calls the fetch and display functions
     async function main() {
         const allDishes = await fetchAllDishes();
         displayDishes(allDishes);
     }
 
+
+
     // === Functions ===
+    // The fetch function that fetches all dishes from the database
+    // Returns an array with all dishes
     async function fetchAllDishes() {
         try {
             const response = await fetch('/api/dishes');
@@ -20,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Function that renders all dishes onto the table in index.html
     function displayDishes(dishes) {
         const tbody = document.getElementById("dish-table-body");
         const fragment = document.createDocumentFragment();
@@ -46,6 +55,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
             tbody.innerHTML = "";
             tbody.appendChild(fragment);
+
+            addEventListeners();
         } catch (error) {
             const errorRow = document.createElement('tr');
             const errorCell = document.createElement('td');
@@ -57,9 +68,40 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Simple capitalize function
     function capitalize(string) {
         return string.charAt(0).toUpperCase() + string.slice(1);
     }
 
+    async function addEventListeners() {
+        const deleteButtons = document.querySelectorAll('.delete-btn');
+        deleteButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const id = button.dataset.id;
+                deleteDish(id);
+            })
+        })
+    }
+
+    async function deleteDish(id) {
+        const confirmDelete = confirm("Are you sure you want to delete this dish?")
+        if (!confirmDelete) return;
+        
+        try {
+            const response = await fetch(`/api/dishes/${id}`, { method: 'DELETE' });
+
+            if (!response.ok) {
+                throw new Error('Failed to delete dish')
+            }
+
+            console.log(`Deleted dish with id: ${id}`);
+
+            const updatedDished = await fetchAllDishes();
+            displayDishes(updatedDished);
+            
+        } catch (error) {
+            console.error('Error deleting dish:', error);
+        }
+    }
     
 })
