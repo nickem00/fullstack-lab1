@@ -163,13 +163,16 @@ document.addEventListener('DOMContentLoaded', function() {
             originInput.value = dish.origin;
             isVegetarianInput.checked = dish.isVegetarian;
 
-            currentDishId = id;
+            currentDishId = id; // Set the current dish ID for later use
 
         } catch (error) {
             console.error('Errir updating dish', error);
         }
     }
     
+    // The function that handles the form submission
+    // Checks if the dish is new or existing
+    // and calls the appropriate API function
     async function submitForm() {
         const name = document.getElementById('name').value.trim();
         const ingredients = document.getElementById('ingredients').value.split(',').map(i => i.trim());
@@ -208,6 +211,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             }
 
+            // Hide modal and update the table
             modal.classList.add('hidden');
             const updatedDished = await fetchAllDishes();
             displayDishes(updatedDished);
